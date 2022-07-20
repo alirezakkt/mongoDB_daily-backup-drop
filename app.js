@@ -18,17 +18,16 @@ Using mongodump - without any args:
 Using mongorestore - without any args:
   will try to restore every database from "dump" folder in current directory, if "dump" folder does not exist then it will simply fail.
 */
-
+//enter your database name
 const DB_NAME = 'testdb';
-const ARCHIVE_PATH = path.join(__dirname, 'public', `${DB_NAME}.${new Date().getFullYear()}.${new Date().getMonth() + 1}.${new Date().getDate()}.gzip`);
+//save your backup file in dbbackup dir
+const ARCHIVE_PATH = path.join(__dirname, 'dbbackup', `${DB_NAME}.${new Date().getFullYear()}.${new Date().getMonth() + 1}.${new Date().getDate()}.gzip`);
 
-// 1. Cron expression for every 5 seconds - */5 * * * * *
-// 2. Cron expression for every night at 00:00 hours (0 0 * * * )
-// Note: 2nd expression only contains 5 fields, since seconds is not necessary
+//  Cron expression for every night at 00:00 hours (0 0 * * * ) after 3 sec drop DATAbase
 
 // Scheduling the backup every 5 seconds (using node-cron)
-cron.schedule('*/5 * * * * *', () => backupMongoDB());
-cron.schedule('*/7 * * * * *', () => dropDatabase());
+cron.schedule('0 0 * * *', () => backupMongoDB());
+cron.schedule('3 0 * * *', () => dropDatabase());
 const { promisify } = require('util');
 // const exec = promisify(require('child_process').exec)
 
